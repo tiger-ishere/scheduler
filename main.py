@@ -7,8 +7,34 @@ from database import users_collection, schedules_collection
 from auth import get_password_hash, verify_password, create_access_token, get_current_user, ACCESS_TOKEN_EXPIRE_MINUTES
 from datetime import datetime, timedelta
 from bson import ObjectId
+import asyncio
+import os
+import urllib.request
 
 app = FastAPI()
+
+@app.get("/ping")
+def ping():
+    return {"status": "awake"}
+
+async def keep_awake():
+    url = os.getenv("RENDER_EXTERNAL_URL")
+    if not url:
+        return
+    
+    while True:
+        await asyncio.sleep(840)  # Sleep for 14 minutes
+        try:
+            req = urllib.request.Request(f"{url}/ping", headers={'User-Agent': 'KeepAwakeBot/1.0'})
+            urllib.request.urlopen(req)
+            print("Successfully pinged self to stay awake.")
+        except Exception as e:
+            print(f"Failed to ping self: {e}")
+
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(keep_awake())
+
 
 app.add_middleware(
     CORSMiddleware,
