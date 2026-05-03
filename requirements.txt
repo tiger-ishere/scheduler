@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+motor
+python-dotenv
+pydantic
+bcrypt
+python-jose
+ortools
+openrouteservice
