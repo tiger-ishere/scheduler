@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_API_URL || 'https://scheduler-backend-iu05.onrender.com';
+export const BASE_URL = import.meta.env.VITE_API_URL || 'https://scheduler-backend-iu05.onrender.com';
 
 export const getAuthToken = () => localStorage.getItem('token');
 export const setAuthToken = (token) => localStorage.setItem('token', token);
