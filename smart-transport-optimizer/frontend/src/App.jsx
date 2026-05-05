@@ -10,7 +10,7 @@ import Layout from './components/Layout';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import SavedPlans from './pages/SavedPlans';
-import { fetchWithAuth } from './api';
+import { fetchWithAuth, wakeupServer } from './api';
 
 function MainApp() {
   const [routes, setRoutes] = useState([]);
@@ -152,6 +152,10 @@ function MainApp() {
 }
 
 function App() {
+  useEffect(() => {
+    wakeupServer();
+  }, []);
+
   return (
     <Router>
       <Routes>

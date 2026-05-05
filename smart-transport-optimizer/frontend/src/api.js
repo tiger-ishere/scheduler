@@ -21,15 +21,26 @@ export const fetchWithAuth = async (endpoint, options = {}) => {
         headers['Authorization'] = `Bearer ${token}`;
     }
 
-    const response = await fetch(`${BASE_URL}${endpoint}`, {
-        ...options,
-        headers,
-    });
+    try {
+        const response = await fetch(`${BASE_URL}${endpoint}`, {
+            ...options,
+            headers,
+        });
 
-    if (response.status === 401) {
-        removeAuthToken();
-        window.location.href = '/login';
+        if (response.status === 401) {
+            removeAuthToken();
+            window.location.href = '/login';
+        }
+
+        return response;
+    } catch (error) {
+        if (error.name === 'TypeError' && error.message === 'Failed to fetch') {
+            throw new Error('Server is waking up (may take up to 60s). Please wait and try again.');
+        }
+        throw error;
     }
+};
 
-    return response;
+export const wakeupServer = () => {
+    fetch(`${BASE_URL}/ping`).catch(() => {});
 };

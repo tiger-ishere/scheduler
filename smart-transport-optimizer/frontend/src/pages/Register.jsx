@@ -29,7 +29,11 @@ const Register = () => {
 
       navigate('/login');
     } catch (err) {
-      setError(err.message);
+      if (err.message === 'Failed to fetch') {
+        setError('Server is waking up (may take up to 60s). Please wait and try again.');
+      } else {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }
